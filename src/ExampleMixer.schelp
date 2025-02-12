@@ -1,0 +1,25 @@
+TITLE:: ExampleMixer
+summary:: An example mixer.
+categories:: UGens>Multichannel
+related:: Classes/Mix
+
+DESCRIPTION::
+
+A simple demo UGen.
+
+CLASSMETHODS::
+
+METHOD:: kr
+Sum both signals at control rate and divide their sum by 2.
+argument:: sigA
+argument:: sigB
+
+METHOD:: ar
+Sum both audio signals and divide their sum by 2.
+argument:: sigA
+argument:: sigB
+
+
+INSTANCEMETHODS::
+
+EXAMPLES::

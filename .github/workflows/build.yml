@@ -1,0 +1,52 @@
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
+    strategy:
+      matrix:
+        include:
+          - name: macOS-x64
+            os: macos-13
+
+          - name: macOS-arm64
+            os: macos-latest
+
+          - name: Linux-x64
+            os: ubuntu-latest
+
+    env:
+      SC_SRC_PATH: ${{ github.workspace }}/supercollider
+      ARCHIVE_NAME: ExampleMixer-${{ matrix.name }}.zip
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Checkout SuperCollider
+        uses: actions/checkout@v4
+        with:
+          repository: supercollider/supercollider
+          path: ${{ env.SC_SRC_PATH }}
+          ref: main
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+            mkdir build
+            cd build
+            cmake -DSC_SRC_PATH=${{ env.SC_SRC_PATH}} ..
+
+      - name: Build
+        shell: bash
+        run: cmake --build build --target install --config Release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "ExampleMixer_${{matrix.name}}_${{github.sha}}"
+          path: install/
